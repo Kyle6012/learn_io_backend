@@ -1,6 +1,7 @@
 const articlesController = require('../controllers/articlesController');
 const express = require('express');
 const router = express.Router();
+const { authenticateUser, authorizeRoles } = require('../middlewares/authourizationMiddleware');
 
 /**
  * @swagger
@@ -10,6 +11,8 @@ const router = express.Router();
  *     description: Create a new article in the system.
  *     tags:
  *       - Articles
+ *     security:
+ *       - BearerAuth: []  # Requires JWT authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -50,7 +53,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.post('/articles', articlesController.createArticle);
+router.post('/articles', authenticateUser, authorizeRoles('admin', 'staff'), articlesController.createArticle);
 
 /**
  * @swagger
@@ -60,6 +63,8 @@ router.post('/articles', articlesController.createArticle);
  *     description: Update the details of an existing article.
  *     tags:
  *       - Articles
+ *     security:
+ *       - BearerAuth: []  # Requires JWT authentication
  *     parameters:
  *       - in: path
  *         name: id
@@ -109,7 +114,7 @@ router.post('/articles', articlesController.createArticle);
  *       500:
  *         description: Server error
  */
-router.put('/articles/:id', articlesController.updateArticle);
+router.put('/articles/:id', authenticateUser, authorizeRoles('admin', 'staff'), articlesController.updateArticle);
 
 /**
  * @swagger
@@ -119,6 +124,8 @@ router.put('/articles/:id', articlesController.updateArticle);
  *     description: Delete an article by its ID.
  *     tags:
  *       - Articles
+ *     security:
+ *       - BearerAuth: []  # Requires JWT authentication
  *     parameters:
  *       - in: path
  *         name: id
@@ -142,8 +149,7 @@ router.put('/articles/:id', articlesController.updateArticle);
  *       500:
  *         description: Server error
  */
-router.delete('/articles/:id', articlesController.deleteArticle);
-
+router.delete('/articles/:id', authenticateUser, authorizeRoles('admin'), articlesController.deleteArticle);
 
 /**
  * @swagger
