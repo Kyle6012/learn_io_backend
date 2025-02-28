@@ -141,7 +141,7 @@ router.get('/:id', lessonsController.getLessonById);
  *       500:
  *         description: Server error
  */
-router.post('/', lessonsController.createLesson);
+router.post('/lessons', lessonsController.createLesson);
 
 /**
  * @swagger
