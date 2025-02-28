@@ -5,7 +5,7 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
 
 /**
  * @swagger
- * /articles:
+ * /api/articles:
  *   post:
  *     summary: Create a new article
  *     description: Create a new article in the system.
@@ -54,10 +54,11 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
  *         description: Server error
  */
 router.post('/articles', authenticateUser, authorizeRoles('admin', 'staff'), articlesController.createArticle);
+ 
 
 /**
  * @swagger
- * /articles/{id}:
+ * /api/articles/{id}:
  *   put:
  *     summary: Update an existing article
  *     description: Update the details of an existing article.
@@ -114,11 +115,11 @@ router.post('/articles', authenticateUser, authorizeRoles('admin', 'staff'), art
  *       500:
  *         description: Server error
  */
-router.put('/articles/:id', authenticateUser, authorizeRoles('admin', 'staff'), articlesController.updateArticle);
-
+router.put('/articles/:id',  articlesController.updateArticle);
+// authenticateUser, authorizeRoles('admin', 'staff'),
 /**
  * @swagger
- * /articles/{id}:
+ * /api/articles/{id}:
  *   delete:
  *     summary: Delete an article
  *     description: Delete an article by its ID.
@@ -153,7 +154,7 @@ router.delete('/articles/:id', authenticateUser, authorizeRoles('admin'), articl
 
 /**
  * @swagger
- * /articles:
+ * /api/articles:
  *   get:
  *     summary: Get all articles
  *     description: Retrieve a list of all articles.
