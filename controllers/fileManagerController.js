@@ -56,7 +56,7 @@ const deleteFile = (req, res) => {
 };
 
 // update handler
-/*const updateFile = (req, res) => {
+const updateFile = (req, res) => {
   const filePath = path.join(__dirname, '..', 'uploads', req.params.filename);
 
   fs.unlink(filePath, (err) => {
@@ -73,7 +73,7 @@ const deleteFile = (req, res) => {
       file: req.file
     });
   });
-};*/
+};
 
 module.exports = {
   uploadFile,

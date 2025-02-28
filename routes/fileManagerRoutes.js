@@ -110,18 +110,13 @@ const router = express.Router();
  *         description: Server error
  */
 
-
-// upload file route
-router.post('/file/upload', async (req, res) => fileController.uploadFile(req, res));
-
 // Retrieve file route
 router.get('/file/uploaded/:filename', async (req, res) => fileController.getFile(req, res));
 
 // Delete file route
 router.delete('/file/uploaded/:filename', async (req, res) => fileController.deleteFile(req, res));
 
-// Update file route
-//router.put('/file/uploaded/:filename', (req, res) => fileController.updateFile(req, res));
+router.put('/file/uploaded/:filename', (req, res) => fileController.updateFile(req, res));
 
 module.exports = (upload) => {
   router.post('/file/upload', upload.single('file'), async (req, res) => fileController.uploadFile(req, res));
