@@ -1,5 +1,23 @@
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
+
+const Storage = () => {
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      const uploadDir = 'uploads/';
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir);
+      }
+      cb(null, uploadDir); 
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.originalname/* Date.now() + path.extname(file.originalname)*/); // unique filename with timestamp
+    }
+  });
+  
+  return storage;
+};
 
 // upload handler
 const uploadFile = (req, res) => {
@@ -38,7 +56,7 @@ const deleteFile = (req, res) => {
 };
 
 // update handler
-const updateFile = (req, res) => {
+/*const updateFile = (req, res) => {
   const filePath = path.join(__dirname, '..', 'uploads', req.params.filename);
 
   fs.unlink(filePath, (err) => {
@@ -55,11 +73,11 @@ const updateFile = (req, res) => {
       file: req.file
     });
   });
-};
+};*/
 
 module.exports = {
   uploadFile,
   getFile,
   deleteFile,
-  updateFile
+  Storage
 };
