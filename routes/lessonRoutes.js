@@ -41,7 +41,7 @@ const lessonsController = require('../controllers/lessonsController');
  *       500:
  *         description: Server error
  */
-router.get('/', lessonsController.getAllLessons);
+router.get('/lessons', lessonsController.getAllLessons);
 
 /**
  * @swagger
