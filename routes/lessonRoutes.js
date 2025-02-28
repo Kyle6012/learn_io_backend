@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const lessonsController = require('../controllers/lessonsController');
 
+
 /**
  * @swagger
  * tags:
@@ -141,11 +142,10 @@ router.get('/:id', lessonsController.getLessonById);
  *       500:
  *         description: Server error
  */
-router.post('/', lessonsController.createLesson);
-
+router.post('/lessons', lessonsController.createLesson);
 /**
  * @swagger
- * /api/lessons/{id}:
+ * /api/lessons:
  *   put:
  *     summary: Update an existing lesson
  *     description: Update a lesson by its unique ID.
