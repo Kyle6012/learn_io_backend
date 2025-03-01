@@ -3,10 +3,10 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com', // Change to your SMTP provider
   port: 465, // 587 for TLS, 465 for SSL
-  secure: true, // Use TLS
+  secure: true, // Use SSL
   auth: {
     user: 'kennedygreat36@gmail.com', //
-    pass: '', // Replace with your actual password or API key
+    pass: '', // App password
   },
 });
 
