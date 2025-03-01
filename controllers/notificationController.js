@@ -7,7 +7,7 @@ const transporter = nodemailer.createTransport({
   secure: true, // True for SSL
   auth: {
     user: 'kennedygreat36@gmail.com', // Load email from environment variables
-    pass: 'dmcc mhxa oqmj yrhw', // Use App Password
+    pass: '', // Use App Password
   },
 });
 
