@@ -24,7 +24,7 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
  *                 type: string
  *                 example: My First Article
  *                 description: The title of the article.
- *               content:
+ *               body:
  *                 type: string
  *                 example: This is the content of the article.
  *                 description: The content of the article.
@@ -46,15 +46,15 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
  *                       type: string
  *                     title:
  *                       type: string
- *                     content:
+ *                     body:
  *                       type: string
  *       400:
  *         description: Bad request, validation failed
  *       500:
  *         description: Server error
  */
-router.post('/articles', authenticateUser, authorizeRoles('admin', 'staff'), articlesController.createArticle);
- 
+router.post('/articles', authenticateUser, authorizeRoles('admin', 'staff', 'student'), articlesController.createArticle);
+
 
 /**
  * @swagger
@@ -84,7 +84,7 @@ router.post('/articles', authenticateUser, authorizeRoles('admin', 'staff'), art
  *                 type: string
  *                 example: Updated Article Title
  *                 description: The new title of the article.
- *               content:
+ *               body:
  *                 type: string
  *                 example: This is the updated content of the article.
  *                 description: The new content of the article.
@@ -115,7 +115,7 @@ router.post('/articles', authenticateUser, authorizeRoles('admin', 'staff'), art
  *       500:
  *         description: Server error
  */
-router.put('/articles/:id',  articlesController.updateArticle);
+router.put('/articles/:id', articlesController.updateArticle);
 // authenticateUser, authorizeRoles('admin', 'staff'),
 /**
  * @swagger

@@ -24,7 +24,7 @@ const { authenticateUser, authorizeRoles, validateRoles } = require('../middlewa
  *                 description: The user's name.
  *               email:
  *                 type: string
- *                 example: brandon@example.com
+ *                 example: brandon@.com
  *                 description: The user's email address.
  *               password:
  *                 type: string
@@ -91,7 +91,7 @@ router.post('/register', validateRoles, userController.register);
  *             properties:
  *               email:
  *                 type: string
- *                 example: brandon@example.com
+ *                 example: brandon@.com
  *                 description: The user's email address.
  *               password:
  *                 type: string
@@ -177,7 +177,7 @@ router.post('/login', userController.login);
  */
 router.get('/users', authenticateUser, userController.getAllUsers);
 // authorizeRoles('admin'),
-	
+
 
 /**
  * @swagger
