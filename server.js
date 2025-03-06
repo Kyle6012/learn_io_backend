@@ -8,6 +8,12 @@ const routes = require('./routes/index');
 const Initializer = require('./common/initializer');
 const errorHandler = require('./middlewares/errorMiddleware');
 const logRequestResponse = require('./middlewares/loggerMiddleware');
+const fileController = require("./controllers/fileManagerController");
+const fileManagerRoutes = require('./routes/fileManagerRoutes');
+const multer = require('multer');
+
+const upload = multer({ storage: fileController.Storage() });
+
 
 Initializer.init().then(() => {
   try {
@@ -18,6 +24,7 @@ Initializer.init().then(() => {
 
     app.use(logRequestResponse);
     app.use(errorHandler);
+    app.use(fileManagerRoutes(upload));
 
     const PORT = envUtils.get('PORT') || 3000;
     const server = app.listen(PORT, () => {
