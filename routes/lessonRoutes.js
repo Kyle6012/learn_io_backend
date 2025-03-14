@@ -3,6 +3,7 @@ const router = express.Router();
 const lessonsController = require('../controllers/lessonsController');
 const { authenticateUser, authorizeRoles } = require('../middlewares/authourizationMiddleware');
 
+
 /**
  * @swagger
  * tags:
@@ -41,7 +42,7 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
  *       500:
  *         description: Server error
  */
-router.get('/', lessonsController.getAllLessons);
+router.get('/lessons', lessonsController.getAllLessons);
 
 /**
  * @swagger
@@ -144,11 +145,14 @@ router.get('/:id', lessonsController.getLessonById);
  *       500:
  *         description: Server error
  */
+
+router.post('/lessons', lessonsController.createLesson);
+
 router.post('/',authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.createLesson);
 
 /**
  * @swagger
- * /api/lessons/{id}:
+ * /api/lessons:
  *   put:
  *     summary: Update an existing lesson
  *     description: Update a lesson by its unique ID.
