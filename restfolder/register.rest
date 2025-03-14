@@ -1,10 +1,52 @@
-
-POST http://localhost:3000/api/register/
+### Register User
+POST http://localhost:3000/api/register
 Content-Type: application/json
 
 {
-  "name": "user",
-  "email": "user@example.com",
-   "password": "password",
-   "passwordConfirm": "password"
+    "name": "John Doe",
+    "email": "johndoe@.com",
+    "role": "student",
+    "password": "password",
+    "passwordConfirm": "password"
+}
+
+### Login User
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "johndoe@example.com",
+    "password": "password123"
+}
+
+### Get All Users
+GET http://localhost:3000/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Yzk1ZWQzZDBkNjQyMjkwNWJmYmNhOSIsImlhdCI6MTc0MTI1MDI2MywiZXhwIjoxNzQxMzM2NjYzfQ.xWb73wdSpX5kxnV2xtem2dmP1ivuTXXkPCVKwlGu9s4
+
+### Update User
+PUT http://localhost:3000/api/users/USER_ID_HERE
+Content-Type: application/json
+Authorization: Bearer <your_token_here>
+
+{
+    "name": "John Updated",
+    "profilePicture": "https://example.com/profile.jpg",
+    "bio": "Updated bio",
+    "role": "admin",
+    "status": "active",
+    "is_deleted": false
+}
+
+### Soft Delete User
+DELETE http://localhost:3000/api/users/USER_ID_HERE
+Authorization: Bearer <your_token_here>
+
+### Create Article
+POST http://localhost:3000/api/articles
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Yzk1ZWQzZDBkNjQyMjkwNWJmYmNhOSIsImlhdCI6MTc0MTI1MDI2MywiZXhwIjoxNzQxMzM2NjYzfQ.xWb73wdSpX5kxnV2xtem2dmP1ivuTXXkPCVKwlGu9s4
+
+{
+    "title": "New Article",
+    "body": "This is the content of the new article."
 }
