@@ -42,7 +42,7 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
  *       500:
  *         description: Server error
  */
-router.get('/lessons', lessonsController.getAllLessons);
+router.get('/lessons/', lessonsController.getAllLessons);
 
 /**
  * @swagger
@@ -79,7 +79,7 @@ router.get('/lessons', lessonsController.getAllLessons);
  *       500:
  *         description: Server error
  */
-router.get('/:id', lessonsController.getLessonById);
+router.get('/lessons/:id', lessonsController.getLessonById);
 
 /**
  * @swagger
@@ -145,6 +145,7 @@ router.get('/:id', lessonsController.getLessonById);
  *       500:
  *         description: Server error
  */
+router.post('/lessons/', lessonsController.createLesson);
 router.post('/lessons', lessonsController.createLesson);
 
 router.post('/lessons', lessonsController.createLesson);
@@ -205,6 +206,7 @@ router.post('/',authenticateUser, authorizeRoles('admin', 'staff'), lessonsContr
  *       500:
  *         description: Server error
  */
+router.put('/lessons/:id', lessonsController.updateLesson);
 router.put('/:id',authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.updateLesson);
 
 /**
@@ -231,6 +233,7 @@ router.put('/:id',authenticateUser, authorizeRoles('admin', 'staff'), lessonsCon
  *       500:
  *         description: Server error
  */
+router.delete('/lessons/:id', lessonsController.deleteLesson);
 router.delete('/:id', authenticateUser, authorizeRoles('admin'), lessonsController.deleteLesson);
 
 module.exports = router;
