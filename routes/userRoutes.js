@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const { authenticateUser, authorizeRoles } = require('../middlewares/authourizationMiddleware');
+const { authenticateUser, authorizeRoles, validateRoles } = require('../middlewares/authourizationMiddleware');
 
 /**
  * @swagger
@@ -24,7 +24,7 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
  *                 description: The user's name.
  *               email:
  *                 type: string
- *                 example: brandon@example.com
+ *                 example: brandon@.com
  *                 description: The user's email address.
  *               password:
  *                 type: string
@@ -34,6 +34,11 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
  *                 type: string
  *                 example: your_password
  *                 description: Confirmation of the user's password.
+ *               role:
+ *                 type: string
+ *                 enum: [admin, staff, student]
+ *                 example: student
+ *                 description: The user's role in the system.
  *     responses:
  *       201:
  *         description: User registered successfully
@@ -57,12 +62,16 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
  *                       type: string
  *                     email:
  *                       type: string
+ *                     role:
+ *                       type: string
+ *                       example: student
  *       400:
  *         description: Bad request, validation failed
  *       500:
  *         description: Server error
  */
-router.post('/register', userController.register);
+router.post('/register', validateRoles, userController.register);
+
 
 
 /**
@@ -82,7 +91,7 @@ router.post('/register', userController.register);
  *             properties:
  *               email:
  *                 type: string
- *                 example: brandon@example.com
+ *                 example: brandon@.com
  *                 description: The user's email address.
  *               password:
  *                 type: string
@@ -166,9 +175,9 @@ router.post('/login', userController.login);
  *       500:
  *         description: Server error
  */
-router.get('/users', authenticateUser, authorizeRoles('admin'), userController.getAllUsers);
+router.get('/users', authenticateUser, userController.getAllUsers);
+// authorizeRoles('admin'),
 
-	
 
 /**
  * @swagger
@@ -179,7 +188,7 @@ router.get('/users', authenticateUser, authorizeRoles('admin'), userController.g
  *     tags:
  *       - Users
  *     security:
- *       - BearerAuth: []  # Requires JWT authentication
+ *       - BearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -202,6 +211,12 @@ router.get('/users', authenticateUser, authorizeRoles('admin'), userController.g
  *                 type: string
  *               bio:
  *                 type: string
+ *               phonenumber:
+ *                 type: string
+ *               school:
+ *                 type: string
+ *               speciality:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Updated user profile
@@ -215,7 +230,7 @@ router.get('/users', authenticateUser, authorizeRoles('admin'), userController.g
  *     tags:
  *       - Users
  *     security:
- *       - BearerAuth: []  # Requires JWT authentication
+ *       - BearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -231,7 +246,7 @@ router.get('/users', authenticateUser, authorizeRoles('admin'), userController.g
  *       500:
  *         description: Server error
  */
-router.patch('/users/:id', authenticateUser, authorizeRoles('admin', 'staff'), userController.updateUser);
+router.patch('/users/:id', authenticateUser, userController.updateUser);
 router.delete('/users/:id', authenticateUser, authorizeRoles('admin'), userController.deleteUser);
 
 module.exports = router;
