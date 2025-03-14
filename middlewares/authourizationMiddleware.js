@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const envUtils = require('../common/envUtils');
 
+
+
 // Middleware to verify token and extract user info
 const authenticateUser = async (req, res, next) => {
     const token = req.header('Authorization');
@@ -18,14 +20,12 @@ const authenticateUser = async (req, res, next) => {
         }
 
         req.user = user; // Attach user object to request
+
         next();
     } catch (err) {
         res.status(400).json({ message: 'Invalid token.' });
     }
 };
-
-
-
 
 
 // Middleware to restrict access based on roles
@@ -41,4 +41,17 @@ const authorizeRoles = (...allowedRoles) => {
     };
 };
 
-module.exports = { authenticateUser, authorizeRoles };
+const validateRoles = (req, res, next) => {
+    const role = req.body.role || "student"; // Default role to 'student'
+    
+    const validRoles = ["admin", "staff", "student"];
+    if (!validRoles.includes(role)) {
+        return res.status(400).json({ message: "Invalid role" });
+    }
+
+    req.userRole = role; // Store role in request for further use
+    next();
+};
+
+
+module.exports = { authenticateUser, authorizeRoles, validateRoles };

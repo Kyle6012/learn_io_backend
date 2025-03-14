@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const lessonsController = require('../controllers/lessonsController');
+const { authenticateUser, authorizeRoles } = require('../middlewares/authourizationMiddleware');
 
 
 /**
@@ -88,6 +89,8 @@ router.get('/:id', lessonsController.getLessonById);
  *     description: Creates a new lesson and returns the created lesson object.
  *     tags:
  *       - Lessons
+ *     security:
+ *       - BearerAuth: []  # Requires JWT authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -142,7 +145,11 @@ router.get('/:id', lessonsController.getLessonById);
  *       500:
  *         description: Server error
  */
+
 router.post('/lessons', lessonsController.createLesson);
+
+router.post('/',authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.createLesson);
+
 /**
  * @swagger
  * /api/lessons:
@@ -150,6 +157,8 @@ router.post('/lessons', lessonsController.createLesson);
  *     summary: Update an existing lesson
  *     description: Update a lesson by its unique ID.
  *     tags: [Lessons]
+ *     security:
+ *       - BearerAuth: []  # Requires JWT authentication
  *     parameters:
  *       - in: path
  *         name: id
@@ -195,7 +204,7 @@ router.post('/lessons', lessonsController.createLesson);
  *       500:
  *         description: Server error
  */
-router.put('/:id', lessonsController.updateLesson);
+router.put('/:id',authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.updateLesson);
 
 /**
  * @swagger
@@ -204,6 +213,8 @@ router.put('/:id', lessonsController.updateLesson);
  *     summary: Delete a lesson
  *     description: Soft-delete a lesson by setting `is_deleted` to `true`.
  *     tags: [Lessons]
+ *     security:
+ *       - BearerAuth: []  # Requires JWT authentication
  *     parameters:
  *       - in: path
  *         name: id
@@ -219,6 +230,6 @@ router.put('/:id', lessonsController.updateLesson);
  *       500:
  *         description: Server error
  */
-router.delete('/:id', lessonsController.deleteLesson);
+router.delete('/:id', authenticateUser, authorizeRoles('admin'), lessonsController.deleteLesson);
 
 module.exports = router;
