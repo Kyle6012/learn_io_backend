@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const lessonsController = require('../controllers/lessonsController');
+const { authenticateUser, authorizeRoles } = require('../middlewares/authourizationMiddleware');
+
 
 /**
  * @swagger
@@ -40,7 +42,7 @@ const lessonsController = require('../controllers/lessonsController');
  *       500:
  *         description: Server error
  */
-router.get('/', lessonsController.getAllLessons);
+router.get('/lessons/', lessonsController.getAllLessons);
 
 /**
  * @swagger
@@ -77,7 +79,7 @@ router.get('/', lessonsController.getAllLessons);
  *       500:
  *         description: Server error
  */
-router.get('/:id', lessonsController.getLessonById);
+router.get('/lessons/:id', lessonsController.getLessonById);
 
 /**
  * @swagger
@@ -87,6 +89,8 @@ router.get('/:id', lessonsController.getLessonById);
  *     description: Creates a new lesson and returns the created lesson object.
  *     tags:
  *       - Lessons
+ *     security:
+ *       - BearerAuth: []  # Requires JWT authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -141,15 +145,22 @@ router.get('/:id', lessonsController.getLessonById);
  *       500:
  *         description: Server error
  */
-router.post('/', lessonsController.createLesson);
+router.post('/lessons/', lessonsController.createLesson);
+router.post('/lessons', lessonsController.createLesson);
+
+router.post('/lessons', lessonsController.createLesson);
+
+router.post('/',authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.createLesson);
 
 /**
  * @swagger
- * /api/lessons/{id}:
+ * /api/lessons:
  *   put:
  *     summary: Update an existing lesson
  *     description: Update a lesson by its unique ID.
  *     tags: [Lessons]
+ *     security:
+ *       - BearerAuth: []  # Requires JWT authentication
  *     parameters:
  *       - in: path
  *         name: id
@@ -195,7 +206,8 @@ router.post('/', lessonsController.createLesson);
  *       500:
  *         description: Server error
  */
-router.put('/:id', lessonsController.updateLesson);
+router.put('/lessons/:id', lessonsController.updateLesson);
+router.put('/:id',authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.updateLesson);
 
 /**
  * @swagger
@@ -204,6 +216,8 @@ router.put('/:id', lessonsController.updateLesson);
  *     summary: Delete a lesson
  *     description: Soft-delete a lesson by setting `is_deleted` to `true`.
  *     tags: [Lessons]
+ *     security:
+ *       - BearerAuth: []  # Requires JWT authentication
  *     parameters:
  *       - in: path
  *         name: id
@@ -219,6 +233,7 @@ router.put('/:id', lessonsController.updateLesson);
  *       500:
  *         description: Server error
  */
-router.delete('/:id', lessonsController.deleteLesson);
+router.delete('/lessons/:id', lessonsController.deleteLesson);
+router.delete('/:id', authenticateUser, authorizeRoles('admin'), lessonsController.deleteLesson);
 
 module.exports = router;
