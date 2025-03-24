@@ -1,14 +1,40 @@
 const express = require('express');
 const router = express.Router();
 const lessonsController = require('../controllers/lessonsController');
+const upload = require('../middlewares/uploadMiddleware');
 const { authenticateUser, authorizeRoles } = require('../middlewares/authourizationMiddleware');
 
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     Lesson:
+ *       type: object
+ *       required:
+ *         - title
+ *         - description
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated ID of the lesson
+ *         title:
+ *           type: string
+ *           description: The lesson title
+ *         description:
+ *           type: string
+ *           description: A brief description of the lesson
+ *         file:
+ *           type: string
+ *           format: binary
+ *           description: The uploaded lesson file (PDF or DOC)
+ */
+
+/**
+ * @swagger
  * tags:
  *   name: Lessons
- *   description: API for managing lessons
+ *   description: Lesson management API
  */
 
 /**
@@ -16,224 +42,148 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
  * /api/lessons:
  *   get:
  *     summary: Retrieve all lessons
- *     description: Fetch a list of all lessons that are not deleted.
  *     tags: [Lessons]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: A list of lessons
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 results:
- *                   type: number
- *                   example: 2
- *                 data:
- *                   type: object
- *                   properties:
- *                     lessons:
- *                       type: array
- *                       items:
- *                         $ref: '#/components/schemas/Lesson'
- *       500:
- *         description: Server error
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Lesson'
  */
+
 router.get('/lessons/', lessonsController.getAllLessons);
+
 
 /**
  * @swagger
  * /api/lessons/{id}:
  *   get:
- *     summary: Retrieve a single lesson by ID
- *     description: Fetch a lesson by its unique ID.
+ *     summary: Get a lesson by ID
  *     tags: [Lessons]
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the lesson to retrieve
+ *         required: true
+ *         description: The lesson ID
  *     responses:
  *       200:
- *         description: A single lesson
+ *         description: Lesson data
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 data:
- *                   type: object
- *                   properties:
- *                     lesson:
- *                       $ref: '#/components/schemas/Lesson'
+ *               $ref: '#/components/schemas/Lesson'
  *       404:
  *         description: Lesson not found
- *       500:
- *         description: Server error
  */
-router.get('/lessons/:id', lessonsController.getLessonById);
+
+router.get('/lessons/:id', authenticateUser, lessonsController.getLessonById);
+
 
 /**
  * @swagger
  * /api/lessons:
  *   post:
  *     summary: Create a new lesson
- *     description: Creates a new lesson and returns the created lesson object.
- *     tags:
- *       - Lessons
+ *     tags: [Lessons]
  *     security:
- *       - BearerAuth: []  # Requires JWT authentication
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
  *               title:
  *                 type: string
- *                 example: Introduction to Programming
- *                 description: The title of the lesson.
+ *                 description: Lesson title
  *               description:
  *                 type: string
- *                 example: This lesson covers the basics of programming.
- *                 description: The description of the lesson.
+ *                 description: Lesson description
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: File upload (PDF/DOC)
  *     responses:
  *       201:
  *         description: Lesson created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Lesson created successfully
- *                 lesson:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       description: The unique identifier for the lesson.
- *                     title:
- *                       type: string
- *                       description: The title of the lesson.
- *                     description:
- *                       type: string
- *                       description: The description of the lesson.
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       description: The date and time when the lesson was created.
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       description: The date and time when the lesson was last updated.
- *                     is_deleted:
- *                       type: boolean
- *                       description: Indicates if the lesson is marked as deleted.
  *       400:
- *         description: Bad request, validation failed
- *       500:
- *         description: Server error
+ *         description: Bad request
  */
-router.post('/lessons/', lessonsController.createLesson);
-router.post('/lessons', lessonsController.createLesson);
 
-router.post('/lessons', lessonsController.createLesson);
+router.post('/lessons', authenticateUser, authorizeRoles('admin', 'staff'), upload.single('file'), lessonsController.createLesson);
 
-router.post('/',authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.createLesson);
 
 /**
  * @swagger
  * /api/lessons:
  *   put:
  *     summary: Update an existing lesson
- *     description: Update a lesson by its unique ID.
  *     tags: [Lessons]
  *     security:
- *       - BearerAuth: []  # Requires JWT authentication
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the lesson to update
+ *         required: true
+ *         description: The lesson ID
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
  *               title:
  *                 type: string
- *                 example: Node.js Mastery
- *                 description: The updated title of the lesson
  *               description:
  *                 type: string
- *                 example: Master advanced concepts in Node.js
- *                 description: The updated description of the lesson
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Optional file update
  *     responses:
  *       200:
  *         description: Lesson updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 data:
- *                   type: object
- *                   properties:
- *                     lesson:
- *                       $ref: '#/components/schemas/Lesson'
  *       404:
  *         description: Lesson not found
- *       400:
- *         description: Bad request, validation failed
- *       500:
- *         description: Server error
  */
-router.put('/lessons/:id', lessonsController.updateLesson);
-router.put('/:id',authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.updateLesson);
+
+router.put('/lessons/:id', authenticateUser, authorizeRoles('admin', 'staff'), upload.single('file'), lessonsController.updateLesson);
+
 
 /**
  * @swagger
- * /api/lessons/{id}:
+ * /lessons/{id}:
  *   delete:
- *     summary: Delete a lesson
- *     description: Soft-delete a lesson by setting `is_deleted` to `true`.
+ *     summary: Soft delete a lesson
  *     tags: [Lessons]
  *     security:
- *       - BearerAuth: []  # Requires JWT authentication
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the lesson to delete
+ *         required: true
+ *         description: The lesson ID
  *     responses:
  *       204:
  *         description: Lesson deleted successfully
  *       404:
  *         description: Lesson not found
- *       500:
- *         description: Server error
  */
-router.delete('/lessons/:id', lessonsController.deleteLesson);
-router.delete('/:id', authenticateUser, authorizeRoles('admin'), lessonsController.deleteLesson);
+
+router.delete('/lessons/:id', authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.deleteLesson);
+
 
 module.exports = router;
