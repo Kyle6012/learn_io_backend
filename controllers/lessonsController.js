@@ -1,119 +1,110 @@
-const Lesson = require('../models/lessonModels'); // Import the Lesson model
+const Lesson = require('../models/lessonModels'); // Assuming you have a Lesson model
+const fs = require('fs');
+const path = require('path');
 
-// Retrieve all lessons
-exports.getAllLessons = async (req, res) => {
+/**
+ * @desc Get all lessons
+ * @route GET /api/lessons
+ * @access Private (Authenticated users)
+ */
+exports.getAllLessons = async(req, res) => {
     try {
-        const lessons = await Lesson.find({ is_deleted: false });
-        res.status(200).json({
-            status: 'success',
-            results: lessons.length,
-            data: {
-                lessons
-            }
-        });
+        const lessons = await Lesson.find({ deleted: false }); // Exclude soft-deleted lessons
+        res.status(200).json(lessons);
     } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            message: error.message
-        });
+        res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// Retrieve a single lesson by ID
-exports.getLessonById = async (req, res) => {
+/**
+ * @desc Get a single lesson by ID
+ * @route GET /api/lessons/:id
+ * @access Private
+ */
+exports.getLessonById = async(req, res) => {
     try {
-        const lesson = await Lesson.findOne({ id: req.params.id, is_deleted: false });
-        if (!lesson) {
-            return res.status(404).json({
-                status: 'fail',
-                message: 'Lesson not found'
-            });
+        const lesson = await Lesson.findById(req.params.id);
+        if (!lesson || lesson.deleted) {
+            return res.status(404).json({ message: 'Lesson not found' });
         }
-        res.status(200).json({
-            status: 'success',
-            data: {
-                lesson
-            }
-        });
+        res.status(200).json(lesson);
     } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            message: error.message
-        });
+        res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// Create a new lesson
-exports.createLesson = async (req, res) => {
+/**
+ * @desc Create a new lesson
+ * @route POST /api/lessons
+ * @access Private (Admin/Staff)
+ */
+exports.createLesson = async(req, res) => {
     try {
         const { title, description } = req.body;
-        const newLesson = new Lesson({ title, description });
+        if (!title || !description) {
+            return res.status(400).json({ message: 'Title and description are required' });
+        }
+
+        const newLesson = new Lesson({
+            title,
+            description,
+            file: req.file ? req.file.path : null, // Store file path if uploaded
+        });
+
         await newLesson.save();
-        res.status(201).json({
-            status: 'success',
-            data: {
-                lesson: newLesson
-            }
-        });
+        res.status(201).json({ message: 'Lesson created successfully', lesson: newLesson });
     } catch (error) {
-        res.status(400).json({
-            status: 'error',
-            message: error.message
-        });
+        res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// Update an existing lesson by ID
-exports.updateLesson = async (req, res) => {
+/**
+ * @desc Update a lesson
+ * @route PUT /api/lessons/:id
+ * @access Private (Admin/Staff)
+ */
+exports.updateLesson = async(req, res) => {
     try {
         const { title, description } = req.body;
-        const updatedLesson = await Lesson.findOneAndUpdate(
-            { id: req.params.id, is_deleted: false },
-            { title, description },
-            { new: true, runValidators: true } // Return the updated document and run validators
-        );
-        if (!updatedLesson) {
-            return res.status(404).json({
-                status: 'fail',
-                message: 'Lesson not found'
-            });
+        const lesson = await Lesson.findById(req.params.id);
+
+        if (!lesson || lesson.deleted) {
+            return res.status(404).json({ message: 'Lesson not found' });
         }
-        res.status(200).json({
-            status: 'success',
-            data: {
-                lesson: updatedLesson
-            }
-        });
+
+        // Delete old file if new one is uploaded
+        if (req.file && lesson.file) {
+            fs.unlinkSync(path.resolve(lesson.file));
+        }
+
+        lesson.title = title || lesson.title;
+        lesson.description = description || lesson.description;
+        lesson.file = req.file ? req.file.path : lesson.file;
+
+        await lesson.save();
+        res.status(200).json({ message: 'Lesson updated successfully', lesson });
     } catch (error) {
-        res.status(400).json({
-            status: 'error',
-            message: error.message
-        });
+        res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// Delete a lesson by ID (soft delete)
-exports.deleteLesson = async (req, res) => {
+/**
+ * @desc Soft delete a lesson
+ * @route DELETE /api/lessons/:id
+ * @access Private (Admin/Staff)
+ */
+exports.deleteLesson = async(req, res) => {
     try {
-        const deletedLesson = await Lesson.findOneAndUpdate(
-            { id: req.params.id, is_deleted: false },
-            { is_deleted: true },
-            { new: true } // Return the updated document
-        );
-        if (!deletedLesson) {
-            return res.status(404).json({
-                status: 'fail',
-                message: 'Lesson not found'
-            });
+        const lesson = await Lesson.findById(req.params.id);
+
+        if (!lesson || lesson.deleted) {
+            return res.status(404).json({ message: 'Lesson not found' });
         }
-        res.status(204).json({
-            status: 'success',
-            data: null
-        });
+
+        lesson.deleted = true;
+        await lesson.save();
+        res.status(204).json({ message: 'Lesson deleted successfully' });
     } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            message: error.message
-        });
+        res.status(500).json({ message: 'Server error', error });
     }
 };
