@@ -3,30 +3,30 @@ POST http://localhost:3000/api/register
 Content-Type: application/json
 
 {
-    "name": "John Doe",
-    "email": "johndoe@.com",
-    "role": "student",
+    "name": "John",
+    "email": "john@.com",
+    "role": "staff",
     "password": "password",
     "passwordConfirm": "password"
 }
 
 ### Login User
-POST http://localhost:3000/api/auth/login
+POST http://localhost:3000/api/login
 Content-Type: application/json
 
 {
-    "email": "johndoe@example.com",
-    "password": "password123"
+    "email": "johndoe@.com",
+    "password": "password"
 }
 
 ### Get All Users
 GET http://localhost:3000/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Yzk1ZWQzZDBkNjQyMjkwNWJmYmNhOSIsImlhdCI6MTc0MTI1MDI2MywiZXhwIjoxNzQxMzM2NjYzfQ.xWb73wdSpX5kxnV2xtem2dmP1ivuTXXkPCVKwlGu9s4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTE0OTQ4ZmE4YmMwZGY1ZTk2ZjJjNCIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzQyODE3NjIxLCJleHAiOjE3NDI5MDQwMjF9.dxsfLNRXIhIivffZx2ZVpgdTWX8atUwcYi6i-ahcxVQ
 
 ### Update User
-PUT http://localhost:3000/api/users/USER_ID_HERE
+PUT http://localhost:3000/api/67cec550e5b6179cc92d83f9
 Content-Type: application/json
-Authorization: Bearer <your_token_here>
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Y2VjNTUwZTViNjE3OWNjOTJkODNmOSIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzQxNjA0NTQ0LCJleHAiOjE3NDE2OTA5NDR9.Q3VD8Lnj5jPBwdNv40PfNEciYebOOzBTjPDpPNHLBS
 
 {
     "name": "John Updated",
@@ -38,13 +38,35 @@ Authorization: Bearer <your_token_here>
 }
 
 ### Soft Delete User
-DELETE http://localhost:3000/api/users/USER_ID_HERE
-Authorization: Bearer <your_token_here>
+DELETE http://localhost:3000/api/users/67cec550e5b6179cc92d83f9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Y2VjNTUwZTViNjE3OWNjOTJkODNmOSIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzQxNjA0NTQ0LCJleHAiOjE3NDE2OTA5NDR9.Q3VD8Lnj5jPBwdNv40PfNEciYebOOzBTjPDpPNHLBS
+#### register user
+post http://localhost:3000/api/register
+Content-Type: application/json
+
+{
+  "name": "Brandon",
+  "email": "brandon@.com",
+  "password": "password",
+  "passwordConfirm": "password",
+  "role": "student"
+}
+
+### login user
+post http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+    "email": "brandon@.com",
+    "password": "password"
+}
+
+
 
 ### Create Article
 POST http://localhost:3000/api/articles
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Yzk1ZWQzZDBkNjQyMjkwNWJmYmNhOSIsImlhdCI6MTc0MTI1MDI2MywiZXhwIjoxNzQxMzM2NjYzfQ.xWb73wdSpX5kxnV2xtem2dmP1ivuTXXkPCVKwlGu9s4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTE0OTQ4ZmE4YmMwZGY1ZTk2ZjJjNCIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzQyODE3NjIxLCJleHAiOjE3NDI5MDQwMjF9.dxsfLNRXIhIivffZx2ZVpgdTWX8atUwcYi6i-ahcxVQ
 
 {
     "title": "New Article",

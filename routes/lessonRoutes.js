@@ -41,7 +41,7 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
  *       500:
  *         description: Server error
  */
-router.get('/', lessonsController.getAllLessons);
+router.get('/', authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.getAllLessons);
 
 /**
  * @swagger
@@ -78,7 +78,7 @@ router.get('/', lessonsController.getAllLessons);
  *       500:
  *         description: Server error
  */
-router.get('/:id', lessonsController.getLessonById);
+router.get('/:id', authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.getLessonById);
 
 /**
  * @swagger
@@ -144,7 +144,7 @@ router.get('/:id', lessonsController.getLessonById);
  *       500:
  *         description: Server error
  */
-router.post('/',authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.createLesson);
+router.post('/lessons', authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.createLesson);
 
 /**
  * @swagger
@@ -200,7 +200,7 @@ router.post('/',authenticateUser, authorizeRoles('admin', 'staff'), lessonsContr
  *       500:
  *         description: Server error
  */
-router.put('/:id',authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.updateLesson);
+router.put('/:id', authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.updateLesson);
 
 /**
  * @swagger
