@@ -128,8 +128,12 @@ exports.updateUser = async(req, res) => {
             profilePicture: req.body.profilePicture,
             bio: req.body.bio,
             role: req.body.role,
-            status: req.body.status,
-            is_deleted: req.body.is_deleted
+            status: req.body.role,
+            is_deleted: req.body.is_deleted,
+            phonenumber: req.body.phonenumber,
+            school: req.body.school,
+            speciality: req.body.speciality
+                // Add other updatable fields here as necessary
         };
 
         const user = await User.findByIdAndUpdate(req.params.id, updates, {

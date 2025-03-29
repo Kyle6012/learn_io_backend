@@ -4,6 +4,7 @@ const lessonsController = require('../controllers/lessonsController');
 const upload = require('../middlewares/uploadMiddleware');
 const { authenticateUser, authorizeRoles } = require('../middlewares/authourizationMiddleware');
 
+
 /**
  * @swagger
  * components:
@@ -54,7 +55,9 @@ const { authenticateUser, authorizeRoles } = require('../middlewares/authourizat
  *               items:
  *                 $ref: '#/components/schemas/Lesson'
  */
-router.get('/', authenticateUser, lessonsController.getAllLessons);
+
+router.get('/lessons/', lessonsController.getAllLessons);
+
 
 /**
  * @swagger
@@ -79,7 +82,9 @@ router.get('/', authenticateUser, lessonsController.getAllLessons);
  *       404:
  *         description: Lesson not found
  */
+
 router.get('/lessons/:id', authenticateUser, lessonsController.getLessonById);
+
 
 /**
  * @swagger
@@ -112,11 +117,13 @@ router.get('/lessons/:id', authenticateUser, lessonsController.getLessonById);
  *       400:
  *         description: Bad request
  */
+
 router.post('/lessons', authenticateUser, authorizeRoles('admin', 'staff'), upload.single('file'), lessonsController.createLesson);
+
 
 /**
  * @swagger
- * /api/lessons/{id}:
+ * /api/lessons:
  *   put:
  *     summary: Update an existing lesson
  *     tags: [Lessons]
@@ -150,7 +157,9 @@ router.post('/lessons', authenticateUser, authorizeRoles('admin', 'staff'), uplo
  *       404:
  *         description: Lesson not found
  */
+
 router.put('/lessons/:id', authenticateUser, authorizeRoles('admin', 'staff'), upload.single('file'), lessonsController.updateLesson);
+
 
 /**
  * @swagger
@@ -173,6 +182,8 @@ router.put('/lessons/:id', authenticateUser, authorizeRoles('admin', 'staff'), u
  *       404:
  *         description: Lesson not found
  */
+
 router.delete('/lessons/:id', authenticateUser, authorizeRoles('admin', 'staff'), lessonsController.deleteLesson);
+
 
 module.exports = router;
