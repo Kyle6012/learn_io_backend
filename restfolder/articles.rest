@@ -17,7 +17,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTE0OTQ4Z
 
 
 ### Update an existing article by ID
-PUT http://localhost:3000/articles/{id}
+PUT http://localhost:3000/api/articles/{id}
 Content-Type: application/json
 
 {
