@@ -7,21 +7,23 @@ GET http://localhost:3000/articles/{id}
 ### Create a new article
 POST http://localhost:3000/api/articles
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzhkZmRhNjIzNDhmZDA4YjgyYTM3YyIsImlhdCI6MTc0MTI0OTg0MCwiZXhwIjoxNzQxMzM2MjQwfQ.2wDM-0cbml2oy-ZVxQcW_tdwqaL9ioVF0Wydl16UwqU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTE0OTQ4ZmE4YmMwZGY1ZTk2ZjJjNCIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzQyODIzNzkyLCJleHAiOjE3NDI5MTAxOTJ9.rHhWLZsecPNrmqZpbZhnVR_-E7ha2Yny3agOZpURnmQ
 
 {
     "title": "New Article",
-    "body": "This is the content of the new article."
+    "body": "This is the content of the new article.",
+    "filePath": "/uploads/image.jpg"
 }
 
 
 ### Update an existing article by ID
-PUT http://localhost:3000/articles/{id}
+PUT http://localhost:3000/api/articles/{id}
 Content-Type: application/json
 
 {
     "title": "Updated Article",
     "body": "This is the updated content of the article."
+    
 }
 
 ### Delete an article by ID

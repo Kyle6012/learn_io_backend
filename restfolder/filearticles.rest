@@ -1,0 +1,18 @@
+POST http://localhost:3000/api/articles
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTE0OTQ4ZmE4YmMwZGY1ZTk2ZjJjNCIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzQyODE3NjIxLCJleHAiOjE3NDI5MDQwMjF9.dxsfLNRXIhIivffZx2ZVpgdTWX8atUwcYi6i-ahcxVQ
+Content-Type: multipart/form-data; boundary=boundary123
+
+--boundary123
+Content-Disposition: form-data; name="title"
+
+Introduction to Node.js
+--boundary123
+Content-Disposition: form-data; name="body"
+
+Node.js is a JavaScript runtime...
+--boundary123
+Content-Disposition: form-data; name="image"; filename="image.jpg"
+Content-Type: image/jpeg
+
+< uploads/image.jpg
+--boundary123--

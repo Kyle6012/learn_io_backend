@@ -111,15 +111,15 @@ const router = express.Router();
  */
 
 // Retrieve file route
-router.get('/file/uploaded/:filename', async (req, res) => fileController.getFile(req, res));
+router.get('/file/uploaded/:filename', async(req, res) => fileController.getFile(req, res));
 
 // Delete file route
-router.delete('/file/uploaded/:filename', async (req, res) => fileController.deleteFile(req, res));
+router.delete('/file/uploaded/:filename', async(req, res) => fileController.deleteFile(req, res));
 
 router.put('/file/uploaded/:filename', (req, res) => fileController.updateFile(req, res));
 
 module.exports = (upload) => {
-  router.post('/file/upload', upload.single('file'), async (req, res) => fileController.uploadFile(req, res));
+    router.post('/file/upload', upload.single('file'), async(req, res) => fileController.uploadFile(req, res));
 
-  return router;
+    return router;
 };
